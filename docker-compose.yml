@@ -1,0 +1,70 @@
+version: '3'
+
+networks:
+  mynetwork:
+
+services:
+
+  grafana:
+    image: grafana/grafana:8.4.4-ubuntu
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    user: root
+    networks:
+      - mynetwork
+    volumes:
+      - /mnt/grafana/data:/var/lib/grafana
+    depends_on:
+      - vector
+
+
+  prometheus:
+    image: prom/prometheus:v2.36.2
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    user: root
+    volumes:
+      - /mnt/prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      - mynetwork
+    depends_on:
+      - vector
+
+
+  loki:
+    image: grafana/loki:2.4.1
+    container_name: loki
+    restart: unless-stopped
+    user: root
+    volumes:
+      - ./loki-conf.yml:/etc/loki/loki-conf.yml
+      - /mnt/loki/data/:/loki
+    ports:
+      - "3100:3100"
+    networks:
+      - mynetwork
+    depends_on:
+      - vector
+
+  vector:
+    image: timberio/vector:0.21.2-debian
+    container_name: vector
+    restart: unless-stopped
+    volumes:
+      - ./vector.yml:/etc/vector/vector.yml
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: --config /etc/vector/vector.yml
+    user: root
+    ports:
+      - "8686:8686"
+    networks:
+      - mynetwork
