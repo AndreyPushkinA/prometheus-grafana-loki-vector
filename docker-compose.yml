@@ -28,7 +28,7 @@ services:
       - "9090:9090"
     user: root
     volumes:
-      - /mnt/prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro #/mnt/prometheus/config/prometheus.yml
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
