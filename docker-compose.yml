@@ -59,9 +59,9 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: username
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: database_name
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo123
+      POSTGRES_DB: demo
     networks:
       - mynetwork
     depends_on:
@@ -72,7 +72,7 @@ services:
 #     ports:
 #       - 9187:9187
 #     environment:
-#       DATA_SOURCE_NAME: "postgresql://username:password@postgres:port/database_name"
+#       DATA_SOURCE_NAME: "postgresql://demo:demo123@postgres:5432/demo"
 #     networks:
 #       - mynetwork
 #     depends_on:
