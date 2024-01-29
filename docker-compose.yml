@@ -54,13 +54,13 @@ services:
     depends_on:
       - vector
    
-   postgres:
+  postgres:
     image: postgres:latest
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: demo
-      POSTGRES_PASSWORD: demo123
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: demo
     networks:
       - mynetwork
@@ -72,7 +72,7 @@ services:
     ports:
       - 9187:9187
     environment:
-      DATA_SOURCE_NAME: "postgresql://demo:demo123@postgres:5432/demo"
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/demo"
     networks:
       - mynetwork
     depends_on:
